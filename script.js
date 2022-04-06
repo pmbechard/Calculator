@@ -19,7 +19,7 @@ const calculator =  {
 /* OUTPUT */
 const output = document.getElementById('input');
 function updateOutputResult() {
-    if (calculator.result === NaN) {
+    if (calculator.result === NaN || calculator.result === Infinity || calculator.result === -Infinity) {
         output.textContent = 'Error';
     } else {
         output.textContent = calculator.result.toLocaleString('en-US');
