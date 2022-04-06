@@ -5,12 +5,26 @@ const calculator =  {
 }
 
 const output = document.getElementById('input');
+function updateOutputResult() {
+    if (calculator.result === NaN) {
+        output.textContent = 'Error';
+    } else {
+        output.textContent = calculator.result;
+    }
+    calculator.input = '';
+}
 
 /* Number Buttons */
 const numberButtons = document.querySelectorAll('.number-button');
 numberButtons.forEach( (number) => {
     number.addEventListener('click', () => {
-        if (output.textContent === '0' && number.textContent !== '.') {
+        if (number.textContent === '.') {
+            if (!calculator.input.includes('.') && calculator.input) {
+                calculator.input += number.textContent;
+            } else if (!calculator.input.includes('.') && !calculator.input) {
+                calculator.input += '0' + number.textContent;
+            }
+        } else if (output.textContent === '0' && number.textContent !== '.') {
             calculator.input = number.textContent;
         } else {
             calculator.input += number.textContent;
@@ -53,8 +67,7 @@ equalsButton.addEventListener('click', () => {
 function equals() {
     if (calculator.operator) {
         calculator.result = calculate();
-        output.textContent = calculator.result;
-        calculator.input = ''
+        updateOutputResult();
         calculator.operator = null;
     } else {
         calculator.result = calculator.input;
