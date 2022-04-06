@@ -1,10 +1,25 @@
 /*
 iOS Calculator Replica
 
+
 by Peyton Bechard
+
 
 Created: 5 Apr 2022
 Last Updated: 6 Apr 2022
+
+
+
+KNOWN BUGS:
+    1. CAN'T ADD DECIMALS TO EXISTING WHOLE NUMBERS IF YOU PRESS . FIRST INSTEAD OF 0
+    2. PRECISION WITH PERCENTAGES IS OFF
+    3. PLUS/MINUS DOESN'T WORK IN CALCULATIONS
+    4. NUMBER FORMATTING (COMMAS) DOESN'T WORK WHEN TYPING IN NUMBERS
+    5. FOCUS-VISIBLE PSEUDO SELECTOR NEEDS TO BE CLEARED
+
+TO DO:
+    - ADD FUNCTIONALITY TO CHANGED BETWEEN AC/C FOR CLEAR BUTTON
+    - ADD NUMBER LENGTH LIMIT / TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
 */
 
 
@@ -35,7 +50,7 @@ numberButtons.forEach( (number) => {
         if (number.textContent === '.') {
             if (!calculator.input.includes('.') && calculator.input) {
                 calculator.input += number.textContent;
-            } else if (!calculator.input.includes('.') && !calculator.input) {
+            } else {
                 calculator.input += '0' + number.textContent;
                 calculator.result = calculator.input;
                 calculator.operator = null;
@@ -49,10 +64,12 @@ numberButtons.forEach( (number) => {
         } else {
             calculator.input += number.textContent;
         }
-        if (calculator.input.slice(calculator.input.length - 1) === '.') {
-            output.textContent = Number.parseFloat(calculator.input).toLocaleString('en-US') + '.';
+
+        // BUG 1
+        if (calculator.input.slice(calculator.input.length - 1) === '.' || calculator.input.slice(calculator.input.length - 1) === '0') {
+            output.textContent = calculator.input;
         } else {
-            output.textContent = Number.parseFloat(calculator.input).toLocaleString('en-US');
+            output.textContent = calculator.input.toLocaleString('en-US');
         }
     });
 });
@@ -109,13 +126,14 @@ clearButton.addEventListener('click', () => {
 
 const plusMinusButton = document.getElementById('plus-minus-button');
 plusMinusButton.addEventListener('click', () => {
-    calculator.result = Number.parseFloat(output.textContent.replace(',', ''));
-    calculator.result = 
+    // BUG 3
+    calculator.result = Number.parseFloat(output.textContent.replace(',', '') * -1);
     updateOutputResult();
 });
 
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
+    // BUG 2
     calculator.result = Number.parseFloat(output.textContent.replace(',', '') / 100).toPrecision();
     updateOutputResult();
 });
