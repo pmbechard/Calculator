@@ -97,6 +97,6 @@ function calculate() {
 /* OPTIONS BUTTONS */
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
-    calculator.result = output.textContent / 100;
+    calculator.result = Number.parseFloat(output.textContent.replace(',', '')) / 100;
     updateOutputResult();
 });
