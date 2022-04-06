@@ -1,9 +1,22 @@
+/*
+iOS Calculator Replica
+
+by Peyton Bechard
+
+Created: 5 Apr 2022
+Last Updated: 6 Apr 2022
+*/
+
+
+
+/* CALCULATOR OBJECT */
 const calculator =  {
     result: NaN,
     input: '0',
     operator: null,
 }
 
+/* OUTPUT */
 const output = document.getElementById('input');
 function updateOutputResult() {
     if (calculator.result === NaN) {
@@ -15,7 +28,7 @@ function updateOutputResult() {
     calculator.operator = null;
 }
 
-/* Number Buttons */
+/* NUMBER BUTTONS */
 const numberButtons = document.querySelectorAll('.number-button');
 numberButtons.forEach( (number) => {
     number.addEventListener('click', () => {
@@ -38,6 +51,32 @@ numberButtons.forEach( (number) => {
     });
 });
 
+/* OPERATOR BUTTONS */
+const operatorButtons = document.querySelectorAll('.operator-button');
+operatorButtons.forEach( (op) => {
+    op.addEventListener('click', () => {
+        equals();
+        calculator.operator = op.value;
+        op.classList.add('operator-button-on');
+    });
+});
+
+const equalsButton = document.getElementById('equals-button');
+equalsButton.addEventListener('click', () => equals());
+function equals() {
+    if (calculator.operator) {
+        calculator.result = calculate();
+        updateOutputResult();
+        calculator.operator = null;
+        operatorButtons.forEach( (op) => op.classList.remove('operator-button-on') );
+    } else {
+        calculator.result = calculator.input;
+        calculator.input = '' ;
+    }
+    calculator.operator = '=';
+}
+
+/* OPERATOR CALCULATIONS */
 function calculate() {
     let currentInput = Number.parseFloat(calculator.input);
     let currentResult = Number.parseFloat(calculator.result);
@@ -55,30 +94,4 @@ function calculate() {
     }
 }
 
-const operatorButtons = document.querySelectorAll('.operator-button');
-operatorButtons.forEach( (op) => {
-    op.addEventListener('click', () => {
-        equals();
-        calculator.operator = op.value;
-        op.classList.add('operator-button-on');
-    });
-});
-
-const equalsButton = document.getElementById('equals-button');
-equalsButton.addEventListener('click', () => {
-    equals();
-    calculator.operator = '=';
-});
-
-function equals() {
-    if (calculator.operator) {
-        calculator.result = calculate();
-        updateOutputResult();
-        calculator.operator = null;
-        operatorButtons.forEach( (op) => op.classList.remove('operator-button-on') );
-    } else {
-        calculator.result = calculator.input;
-        calculator.input = '' ;
-    }
-}
-
+/* OPTIONS BUTTONS */
