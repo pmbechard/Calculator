@@ -4,15 +4,14 @@ const calculator =  {
     operator: null,
 }
 
-const output = document.querySelector('#input');
+const output = document.getElementById('input');
 
 /* Number Buttons */
 const numberButtons = document.querySelectorAll('.number-button');
 numberButtons.forEach( (number) => {
     number.addEventListener('click', () => {
-        if (output.textContent === '0') {
+        if (output.textContent === '0' && number.textContent !== '.') {
             calculator.input = number.textContent;
-
         } else {
             calculator.input += number.textContent;
         }
@@ -20,17 +19,20 @@ numberButtons.forEach( (number) => {
     });
 });
 
-
-function calculate(op) {
-    switch (op) {
+function calculate() {
+    let currentInput = Number.parseFloat(calculator.input);
+    let currentResult = Number.parseFloat(calculator.result);
+    switch (calculator.operator) {
         case '+':
-            return calculator.result + Number.parseFloat(calculator.input);
-        case '−':
-            return calculator.result - Number.parseFloat(calculator.input);
-        case '×':
-            return calculator.result * Number.parseFloat(calculator.input);
-        case '÷':
-            return calculator.result / Number.parseFloat(calculator.input);
+            return currentResult + currentInput;
+        case '-':
+            return currentResult - currentInput;
+        case 'x':
+            return currentResult * currentInput;
+        case '/':
+            return currentResult / currentInput;
+        default:
+            return currentResult;
     }
 }
 
@@ -38,10 +40,25 @@ const operatorButtons = document.querySelectorAll('.operator-button');
 operatorButtons.forEach( (op) => {
     op.addEventListener('click', () => {
         equals();
-        calculator.operator = op.textContent;
+        calculator.operator = op.value;
     });
 });
 
+const equalsButton = document.getElementById('equals-button');
+equalsButton.addEventListener('click', () => {
+    equals();
+    calculator.operator = '=';
+});
+
 function equals() {
-    
+    if (calculator.operator) {
+        calculator.result = calculate();
+        output.textContent = calculator.result;
+        calculator.input = ''
+        calculator.operator = null;
+    } else {
+        calculator.result = calculator.input;
+        calculator.input = '' ;
+    }
 }
+
