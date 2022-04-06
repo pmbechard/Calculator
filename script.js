@@ -95,6 +95,13 @@ function calculate() {
 }
 
 /* OPTIONS BUTTONS */
+const clearButton = document.getElementById('clear-button');
+clearButton.addEventListener('click', () => {
+    calculator.input = '0';
+    calculator.result = 0;
+    output.textContent = '0';
+});
+
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
     calculator.result = Number.parseFloat(output.textContent.replace(',', '')) / 100;
