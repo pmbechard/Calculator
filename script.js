@@ -67,7 +67,6 @@ function equals() {
     if (calculator.operator) {
         calculator.result = calculate();
         updateOutputResult();
-        calculator.operator = null;
         operatorButtons.forEach( (op) => op.classList.remove('operator-button-on') );
     } else {
         calculator.result = calculator.input;
@@ -78,8 +77,8 @@ function equals() {
 
 /* OPERATOR CALCULATIONS */
 function calculate() {
-    let currentInput = Number.parseFloat(calculator.input);
     let currentResult = Number.parseFloat(calculator.result);
+    let currentInput = Number.parseFloat(calculator.input);
     switch (calculator.operator) {
         case '+':
             return currentResult + currentInput;
@@ -110,6 +109,7 @@ plusMinusButton.addEventListener('click', () => {
 
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
-    calculator.result = Number.parseFloat(output.textContent.replace(',', '')) / 100;
+    calculator.result = Number.parseFloat(output.textContent.replace(',', '') / 100).toPrecision();
+    // calculator.result = Number.parseFloat(output.textContent.replace(',', '')) * 0.01;
     updateOutputResult();
 });
