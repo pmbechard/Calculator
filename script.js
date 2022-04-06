@@ -47,7 +47,11 @@ numberButtons.forEach( (number) => {
         } else {
             calculator.input += number.textContent;
         }
-        output.textContent = Number.parseFloat(calculator.input).toLocaleString('en-US');
+        if (calculator.input.slice(calculator.input.length - 1) === '.') {
+            output.textContent = Number.parseFloat(calculator.input).toLocaleString('en-US') + '.';
+        } else {
+            output.textContent = Number.parseFloat(calculator.input).toLocaleString('en-US');
+        }
     });
 });
 
@@ -103,13 +107,13 @@ clearButton.addEventListener('click', () => {
 
 const plusMinusButton = document.getElementById('plus-minus-button');
 plusMinusButton.addEventListener('click', () => {
-    calculator.result = Number.parseFloat(output.textContent.replace(',', '')) * - 1;
+    calculator.result = Number.parseFloat(output.textContent.replace(',', ''));
+    calculator.result = 
     updateOutputResult();
 });
 
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
     calculator.result = Number.parseFloat(output.textContent.replace(',', '') / 100).toPrecision();
-    // calculator.result = Number.parseFloat(output.textContent.replace(',', '')) * 0.01;
     updateOutputResult();
 });
