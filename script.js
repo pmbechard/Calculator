@@ -37,6 +37,8 @@ numberButtons.forEach( (number) => {
                 calculator.input += number.textContent;
             } else if (!calculator.input.includes('.') && !calculator.input) {
                 calculator.input += '0' + number.textContent;
+                calculator.result = calculator.input;
+                calculator.operator = null;
             }
         } else if (output.textContent === '0' || !calculator.input) {
             calculator.input = number.textContent;
