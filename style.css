@@ -64,7 +64,7 @@ button {
     height: 9vh;
     width: 9vh;
     border-radius: 50%;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
 }
 
 button:hover {
