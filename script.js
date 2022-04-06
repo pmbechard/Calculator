@@ -102,6 +102,12 @@ clearButton.addEventListener('click', () => {
     output.textContent = '0';
 });
 
+const plusMinusButton = document.getElementById('plus-minus-button');
+plusMinusButton.addEventListener('click', () => {
+    calculator.result = Number.parseFloat(output.textContent.replace(',', '')) * - 1;
+    updateOutputResult();
+});
+
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
     calculator.result = Number.parseFloat(output.textContent.replace(',', '')) / 100;
