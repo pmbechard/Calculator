@@ -22,7 +22,7 @@ function updateOutputResult() {
     if (calculator.result === NaN) {
         output.textContent = 'Error';
     } else {
-        output.textContent = calculator.result;
+        output.textContent = calculator.result.toLocaleString('en-US');
     }
     calculator.input = '';
     calculator.operator = null;
@@ -47,7 +47,7 @@ numberButtons.forEach( (number) => {
         } else {
             calculator.input += number.textContent;
         }
-        output.textContent = calculator.input;
+        output.textContent = Number.parseFloat(calculator.input).toLocaleString('en-US');
     });
 });
 
@@ -95,3 +95,8 @@ function calculate() {
 }
 
 /* OPTIONS BUTTONS */
+const percentButton = document.getElementById('percent-button');
+percentButton.addEventListener('click', () => {
+    calculator.result = output.textContent / 100;
+    updateOutputResult();
+});
