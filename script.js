@@ -12,6 +12,7 @@ function updateOutputResult() {
         output.textContent = calculator.result;
     }
     calculator.input = '';
+    calculator.operator = null;
 }
 
 /* Number Buttons */
@@ -24,8 +25,12 @@ numberButtons.forEach( (number) => {
             } else if (!calculator.input.includes('.') && !calculator.input) {
                 calculator.input += '0' + number.textContent;
             }
-        } else if (output.textContent === '0' && number.textContent !== '.') {
+        } else if (output.textContent === '0' || !calculator.input) {
             calculator.input = number.textContent;
+            if (!calculator.operator || calculator.operator === '=') {
+                calculator.result = calculator.input;
+                calculator.operator = null;
+            }
         } else {
             calculator.input += number.textContent;
         }
@@ -55,6 +60,7 @@ operatorButtons.forEach( (op) => {
     op.addEventListener('click', () => {
         equals();
         calculator.operator = op.value;
+        op.classList.add('operator-button-on');
     });
 });
 
@@ -69,6 +75,7 @@ function equals() {
         calculator.result = calculate();
         updateOutputResult();
         calculator.operator = null;
+        operatorButtons.forEach( (op) => op.classList.remove('operator-button-on') );
     } else {
         calculator.result = calculator.input;
         calculator.input = '' ;
