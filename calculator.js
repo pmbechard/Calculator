@@ -46,7 +46,7 @@ function addToInput(value) {
         if (!currentInput.includes('.')) {
             currentInput += value;
         }
-    } else if (currentInput === '0') {
+    } else if (currentInput === '0' || !currentInput) {
         currentInput = value;
     } else {
         currentInput += value;
@@ -90,9 +90,11 @@ operatorButtons.forEach( (button) => {
 
 const equalsButton = document.getElementById('equals-button');
 equalsButton.addEventListener('click', () => {
+    let temp = currentInput;
     currentInput = doCalculation();
     updateDisplay();
     setStoredValue();
+    currentInput = temp;
 });
 
 function doCalculation() {
