@@ -6,134 +6,133 @@ by Peyton Bechard
 
 
 Created: 5 Apr 2022
-Last Updated: 6 Apr 2022
+Last Updated: 8 Apr 2022
 
-
-
-KNOWN BUGS:
-    1. CAN'T ADD DECIMALS TO EXISTING WHOLE NUMBERS IF YOU PRESS . FIRST INSTEAD OF 0
-    2. PRECISION WITH PERCENTAGES IS OFF
-    3. PLUS/MINUS DOESN'T WORK IN CALCULATIONS
-    4. NUMBER FORMATTING (COMMAS) DOESN'T WORK WHEN TYPING IN NUMBERS
-    5. FOCUS-VISIBLE PSEUDO SELECTOR NEEDS TO BE CLEARED
 
 TO DO:
     - ADD FUNCTIONALITY TO CHANGED BETWEEN AC/C FOR CLEAR BUTTON
     - ADD NUMBER LENGTH LIMIT / TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
+
+
+KNOWN BUGS:
+
 */
 
+let currentInput = '0';
+let storedValue = null;
+let currentOperator = null;
+const displayedValue = document.getElementById('input');
 
-
-/* CALCULATOR OBJECT */
-const calculator =  {
-    result: NaN,
-    input: '0',
-    operator: null,
-}
-
-/* OUTPUT */
-const output = document.getElementById('input');
-function updateOutputResult() {
-    if (calculator.result === NaN || calculator.result === Infinity || calculator.result === -Infinity) {
-        output.textContent = 'Error';
-    } else {
-        output.textContent = calculator.result.toLocaleString('en-US');
-    }
-    calculator.input = '';
-    calculator.operator = null;
-}
-
-/* NUMBER BUTTONS */
+/*         NUMBER BUTTONS       */
 const numberButtons = document.querySelectorAll('.number-button');
-numberButtons.forEach( (number) => {
-    number.addEventListener('click', () => {
-        if (number.textContent === '.') {
-            if (!calculator.input.includes('.') && calculator.input) {
-                calculator.input += number.textContent;
-            } else {
-                calculator.input += '0' + number.textContent;
-                calculator.result = calculator.input;
-                calculator.operator = null;
-            }
-        } else if (output.textContent === '0' || !calculator.input) {
-            calculator.input = number.textContent;
-            if (!calculator.operator || calculator.operator === '=') {
-                calculator.result = calculator.input;
-                calculator.operator = null;
-            }
-        } else {
-            calculator.input += number.textContent;
-        }
-
-        // BUG 1
-        if (calculator.input.slice(calculator.input.length - 1) === '.' || calculator.input.slice(calculator.input.length - 1) === '0') {
-            output.textContent = calculator.input;
-        } else {
-            output.textContent = calculator.input.toLocaleString('en-US');
-        }
+numberButtons.forEach( (button) => {
+    button.addEventListener('click', (e) => {
+        operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
+        addToInput(button.textContent);
     });
 });
 
-/* OPERATOR BUTTONS */
+/*      INPUT AND DISPLAY       */
+function addToInput(value) {
+    if (value === '+-') {
+        currentInput *= -1;
+        currentInput = currentInput.toPrecision();
+        currentInput = currentInput.toString();
+    } else if (value === '%') {
+        currentInput /= 100;
+        currentInput = currentInput.toString();
+    } else if (value === '.') {
+        if (!currentInput.includes('.')) {
+            currentInput += value;
+        }
+    } else if (currentInput === '0' || !currentInput) {
+        currentInput = value;
+    } else {
+        currentInput += value;
+    }
+    updateDisplay();
+}
+
+function updateDisplay() {
+    if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
+        if (!currentInput.includes('.')) {
+            displayedValue.textContent = Number.parseInt(currentInput).toLocaleString('en-US');
+        } else {
+            let splitCurrent = currentInput.split('.');
+            displayedValue.textContent = Number.parseInt(splitCurrent[0]).toLocaleString('en-US') + '.' + splitCurrent[1];
+        }
+    } else {
+        displayedValue.textContent = currentInput;
+    }
+}
+
+/*          OPERATORS           */
 const operatorButtons = document.querySelectorAll('.operator-button');
-operatorButtons.forEach( (op) => {
-    op.addEventListener('click', () => {
-        equals();
-        calculator.operator = op.value;
-        op.classList.add('operator-button-on');
+operatorButtons.forEach( (button) => {
+    button.addEventListener('click', () => {
+        button.classList.add('operator-button-on');
+        if (currentOperator !== null) {
+            currentInput = doCalculation();
+            updateDisplay();
+        }
+        currentOperator = button.value;
+        setStoredValue();
     });
 });
 
 const equalsButton = document.getElementById('equals-button');
-equalsButton.addEventListener('click', () => equals());
-function equals() {
-    if (calculator.operator) {
-        calculator.result = calculate();
-        updateOutputResult();
-        operatorButtons.forEach( (op) => op.classList.remove('operator-button-on') );
-    } else {
-        calculator.result = calculator.input;
-        calculator.input = '' ;
-    }
-    calculator.operator = '=';
-}
-
-/* OPERATOR CALCULATIONS */
-function calculate() {
-    let currentResult = Number.parseFloat(calculator.result);
-    let currentInput = Number.parseFloat(calculator.input);
-    switch (calculator.operator) {
-        case '+':
-            return currentResult + currentInput;
-        case '-':
-            return currentResult - currentInput;
-        case 'x':
-            return currentResult * currentInput;
-        case '/':
-            return currentResult / currentInput;
-        default:
-            return currentResult;
-    }
-}
-
-/* OPTIONS BUTTONS */
-const clearButton = document.getElementById('clear-button');
-clearButton.addEventListener('click', () => {
-    calculator.input = '0';
-    calculator.result = 0;
-    output.textContent = '0';
+equalsButton.addEventListener('click', () => {
+    currentInput = doCalculation();
+    updateDisplay();
+    currentOperator = null;
 });
+
+function doCalculation() {
+    let stored = Number.parseFloat(storedValue);
+    let current = Number.parseFloat(currentInput);
+    let result;
+    switch (currentOperator) {
+        case '+':
+            result = Number.parseFloat((stored + current).toPrecision(storedValue.length > currentInput.length ? storedValue.length : currentInput.length));
+            break;
+        case '-':
+            result = Number.parseFloat((stored - current).toPrecision(storedValue.length > currentInput.length ? storedValue.length : currentInput.length));
+            break;
+        case 'x':
+            result = stored * current;
+            break;
+        case '/':
+            result = stored / current;
+            break;
+        default:
+            result = current;
+    }
+    operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
+    return result.toPrecision().toString();
+}
+
+function setStoredValue() {
+    storedValue = currentInput;
+    currentInput = '0';
+}
+
+
+
+/*      OPTIONS BUTTONS         */
+const acButton = document.getElementById('clear-button');
+acButton.addEventListener('click', () => {
+    currentInput = '0';
+    addToInput('0');
+    storedValue = null;
+    operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
+})
 
 const plusMinusButton = document.getElementById('plus-minus-button');
 plusMinusButton.addEventListener('click', () => {
-    // BUG 3
-    calculator.result = Number.parseFloat(output.textContent.replace(',', '') * -1);
-    updateOutputResult();
+    addToInput('+-');
 });
 
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
-    // BUG 2
-    calculator.result = Number.parseFloat(output.textContent.replace(',', '') / 100).toPrecision();
-    updateOutputResult();
-});
+    addToInput('%');
+})
