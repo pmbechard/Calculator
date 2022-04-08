@@ -10,13 +10,11 @@ Last Updated: 8 Apr 2022
 
 
 TO DO:
-    - ADD OPERATOR FUNCTIONALITY
     - ADD FUNCTIONALITY TO CHANGED BETWEEN AC/C FOR CLEAR BUTTON
     - ADD NUMBER LENGTH LIMIT / TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
 
 
 KNOWN BUGS:
-    - Equals button always resets new inputs to 0
 
 */
 
@@ -95,10 +93,10 @@ function doCalculation() {
     let result;
     switch (currentOperator) {
         case '+':
-            result = stored + current;
+            result = Number.parseFloat((stored + current).toPrecision(storedValue.length > currentInput.length ? storedValue.length : currentInput.length));
             break;
         case '-':
-            result = stored - current;
+            result = Number.parseFloat((stored - current).toPrecision(storedValue.length > currentInput.length ? storedValue.length : currentInput.length));
             break;
         case 'x':
             result = stored * current;
