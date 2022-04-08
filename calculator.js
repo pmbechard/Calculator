@@ -16,7 +16,7 @@ TO DO:
 
 
 KNOWN BUGS:
-    
+    - Equals button always resets new inputs to 0
 
 */
 
@@ -29,6 +29,7 @@ const displayedValue = document.getElementById('input');
 const numberButtons = document.querySelectorAll('.number-button');
 numberButtons.forEach( (button) => {
     button.addEventListener('click', (e) => {
+        operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
         addToInput(button.textContent);
     });
 });
@@ -68,17 +69,10 @@ function updateDisplay() {
 }
 
 /*          OPERATORS           */
-// for each operator:
-    // calculate the operation between stored value and input (based on previous operator)
-    // activate the current operator
-    // move input to stored value
-    // set input to '0'
-
-// determine operator function and return appropriate values
-
 const operatorButtons = document.querySelectorAll('.operator-button');
 operatorButtons.forEach( (button) => {
     button.addEventListener('click', () => {
+        button.classList.add('operator-button-on');
         if (currentOperator !== null) {
             currentInput = doCalculation();
             updateDisplay();
@@ -90,11 +84,9 @@ operatorButtons.forEach( (button) => {
 
 const equalsButton = document.getElementById('equals-button');
 equalsButton.addEventListener('click', () => {
-    let temp = currentInput;
     currentInput = doCalculation();
     updateDisplay();
-    setStoredValue();
-    currentInput = temp;
+    currentOperator = null;
 });
 
 function doCalculation() {
@@ -114,7 +106,10 @@ function doCalculation() {
         case '/':
             result = stored / current;
             break;
+        default:
+            result = current;
     }
+    operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
     return result.toPrecision().toString();
 }
 
@@ -131,6 +126,7 @@ acButton.addEventListener('click', () => {
     currentInput = '0';
     addToInput('0');
     storedValue = null;
+    operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
 })
 
 const plusMinusButton = document.getElementById('plus-minus-button');
