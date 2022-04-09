@@ -6,7 +6,7 @@ by Peyton Bechard
 
 
 Created: 5 Apr 2022
-Last Updated: 8 Apr 2022
+Last Updated: 9 Apr 2022
 
 
 TO DO:
@@ -76,6 +76,7 @@ const operatorButtons = document.querySelectorAll('.operator-button');
 operatorButtons.forEach( (button) => {
     button.addEventListener('click', () => {
         button.classList.add('operator-button-on');
+        acButton.textContent = 'C';
         if (currentOperator !== null) {
             currentInput = doCalculation();
             updateDisplay();
@@ -126,9 +127,12 @@ function setStoredValue() {
 /*      OPTIONS BUTTONS         */
 const acButton = document.getElementById('clear-button');
 acButton.addEventListener('click', () => {
+    if (acButton.textContent === 'AC') {
+        storedValue = null;
+    }
     currentInput = '0';
     addToInput('0');
-    storedValue = null;
+    acButton.textContent = 'AC';
     operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
 })
 
