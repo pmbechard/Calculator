@@ -20,7 +20,7 @@ KNOWN BUGS:
 
 let currentInput = '0';
 let storedValue = null;
-let currentOperator = null;
+let currentOperator = '';
 const displayedValue = document.getElementById('input');
 
 /*         NUMBER BUTTONS       */
@@ -47,6 +47,9 @@ function addToInput(value) {
         }
     } else if (currentInput === '0' || !currentInput) {
         currentInput = value;
+    } else if (currentOperator === null) {
+        currentInput = value;
+        currentOperator = '';
     } else {
         currentInput += value;
     }
