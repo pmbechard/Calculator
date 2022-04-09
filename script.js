@@ -10,10 +10,10 @@ Last Updated: 9 Apr 2022
 
 
 TO DO:
-    - ADD NUMBER LENGTH LIMIT / TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
-
+    - RESULTS TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
 
 KNOWN BUGS:
+    - None
 
 */
 
@@ -33,6 +33,7 @@ numberButtons.forEach( (button) => {
 
 /*      INPUT AND DISPLAY       */
 function addToInput(value) {
+    
     if (value === '+-') {
         currentInput *= -1;
         currentInput = currentInput.toPrecision();
@@ -50,7 +51,10 @@ function addToInput(value) {
         currentInput = value;
         currentOperator = '';
     } else {
-        currentInput += value;
+        let limiter = displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length
+        if (limiter < 9) {
+            currentInput += value;
+        }
     }
     updateDisplay();
 }
