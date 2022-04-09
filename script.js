@@ -12,7 +12,6 @@ Last Updated: 9 Apr 2022
 TO DO:
 
 KNOWN BUGS:
-    - ROUNDING IN DECIMAL TRUNCATION (E.G. 10/6=1.66666666 BUT SHOULD BE 10/6=1.66666667)
     - RESULTS FONT TOO LARGE IN MOBILE VIEW 
 
 */
@@ -78,7 +77,10 @@ function updateDisplay() {
         displayedValue.textContent = currentInput;
     }
     if (displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length > 9) {
-        displayedValue.textContent = displayedValue.textContent.slice(0, 10);
+        let beforeDecimal = displayedValue.textContent.split('.')[0].length
+        let afterDecimal = displayedValue.textContent.split('.')[1].length
+        let roundedShortenedValue = Number.parseFloat(displayedValue.textContent).toFixed(9 - beforeDecimal)
+        displayedValue.textContent = roundedShortenedValue;
     }
     sizeOutput();
 }
