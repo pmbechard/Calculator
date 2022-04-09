@@ -57,7 +57,11 @@ function addToInput(value) {
 }
 
 function updateDisplay() {
-    if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
+    console.log(currentInput);
+    console.log(typeof currentInput);
+     if (currentInput === 'NaN' || currentInput.includes('Infinity')) {
+        displayedValue.textContent = 'Error';
+     } else if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
         if (!currentInput.includes('.')) {
             displayedValue.textContent = Number.parseInt(currentInput).toLocaleString('en-US');
         } else {
