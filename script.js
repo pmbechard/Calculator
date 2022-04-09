@@ -10,10 +10,10 @@ Last Updated: 9 Apr 2022
 
 
 TO DO:
-    - RESULTS TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
 
 KNOWN BUGS:
     - ROUNDING IN DECIMAL TRUNCATION (E.G. 10/6=1.66666666 BUT SHOULD BE 10/6=1.66666667)
+    - RESULTS FONT TOO LARGE IN MOBILE VIEW 
 
 */
 
@@ -79,6 +79,30 @@ function updateDisplay() {
     }
     if (displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length > 9) {
         displayedValue.textContent = displayedValue.textContent.slice(0, 10);
+    }
+    sizeOutput();
+}
+
+function sizeOutput() {
+    let length = displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length;
+    switch (length) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            displayedValue.style.fontSize = '1em';
+            break;
+        case 7:
+            displayedValue.style.fontSize = '.9em';
+            break;
+        case 8:
+            displayedValue.style.fontSize = '.8em';
+            break;
+        case 9:
+            displayedValue.style.fontSize = '.7em';
+            break;
     }
 }
 
