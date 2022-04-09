@@ -10,7 +10,6 @@ Last Updated: 9 Apr 2022
 
 
 TO DO:
-    - ADD FUNCTIONALITY TO CHANGED BETWEEN AC/C FOR CLEAR BUTTON
     - ADD NUMBER LENGTH LIMIT / TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
 
 
@@ -57,18 +56,22 @@ function addToInput(value) {
 }
 
 function updateDisplay() {
-     if (currentInput === 'NaN' || currentInput.includes('Infinity')) {
-        displayedValue.textContent = 'Error';
-     } else if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
-        if (!currentInput.includes('.')) {
-            displayedValue.textContent = Number.parseInt(currentInput).toLocaleString('en-US');
-        } else {
-            let splitCurrent = currentInput.split('.');
-            displayedValue.textContent = Number.parseInt(splitCurrent[0]).toLocaleString('en-US') + '.' + splitCurrent[1];
-        }
-    } else {
+    if (currentInput.includes('e')) {
+        console.log('includes e', currentInput);
         displayedValue.textContent = currentInput;
     }
+    if (currentInput === 'NaN' || currentInput.includes('Infinity')) {
+        displayedValue.textContent = 'Error';
+    } else if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
+    if (!currentInput.includes('.')) {
+        displayedValue.textContent = Number.parseInt(currentInput).toLocaleString('en-US');
+    } else {
+        let splitCurrent = currentInput.split('.');
+        displayedValue.textContent = Number.parseInt(splitCurrent[0]).toLocaleString('en-US') + '.' + splitCurrent[1];
+    }
+} else {
+    displayedValue.textContent = currentInput;
+}
 }
 
 /*          OPERATORS           */
@@ -114,7 +117,11 @@ function doCalculation() {
             result = current;
     }
     operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
-    return result.toPrecision().toString();
+    result = result.toPrecision().toString();
+    if (result > 999_999_999) {
+        result = Number.parseFloat(result).toExponential();
+    }
+    return result
 }
 
 function setStoredValue() {
@@ -134,7 +141,7 @@ acButton.addEventListener('click', () => {
     addToInput('0');
     acButton.textContent = 'AC';
     operatorButtons.forEach( (button) => button.classList.remove('operator-button-on'));
-})
+});
 
 const plusMinusButton = document.getElementById('plus-minus-button');
 plusMinusButton.addEventListener('click', () => {
@@ -144,4 +151,4 @@ plusMinusButton.addEventListener('click', () => {
 const percentButton = document.getElementById('percent-button');
 percentButton.addEventListener('click', () => {
     addToInput('%');
-})
+});
