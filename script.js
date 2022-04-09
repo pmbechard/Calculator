@@ -12,8 +12,7 @@ Last Updated: 9 Apr 2022
 TO DO:
 
 KNOWN BUGS:
-    - RESULTS FONT TOO LARGE IN MOBILE VIEW 
-
+    1. RESULTS FONT TOO LARGE IN MOBILE VIEW 
 */
 
 let currentInput = '0';
@@ -61,10 +60,8 @@ function addToInput(value) {
 
 function updateDisplay() {
     if (currentInput.includes('e')) {
-        console.log('includes e', currentInput);
         displayedValue.textContent = currentInput;
-    }
-    if (currentInput === 'NaN' || currentInput.includes('Infinity')) {
+    } else if (currentInput === 'NaN' || currentInput.includes('Infinity')) {
         displayedValue.textContent = 'Error';
     } else if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
     if (!currentInput.includes('.')) {
@@ -76,10 +73,22 @@ function updateDisplay() {
     } else {
         displayedValue.textContent = currentInput;
     }
-    if (displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length > 9) {
-        let beforeDecimal = displayedValue.textContent.split('.')[0].length
-        let afterDecimal = displayedValue.textContent.split('.')[1].length
-        let roundedShortenedValue = Number.parseFloat(displayedValue.textContent).toFixed(9 - beforeDecimal)
+
+    if (displayedValue.textContent > 999999999) {
+        displayedValue.textContent = Number.parseFloat(displayedValue.textContent).toExponential();
+    }
+
+    if (displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length > 9 && !displayedValue.textContent.includes('e')) {
+        let beforeDecimal = displayedValue.textContent.split('.')[0].length;
+        let afterDecimal = displayedValue.textContent.split('.')[1].length;
+        let roundedShortenedValue = Number.parseFloat(displayedValue.textContent).toFixed(9 - beforeDecimal >= 0 ? 9 - beforeDecimal : 0);
+        displayedValue.textContent = roundedShortenedValue;
+
+        // BUG 2
+    } else if (displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length > 9 && displayedValue.textContent.includes('e')) {
+        let beforeDecimal = displayedValue.textContent.split('.')[0].length;
+        let afterDecimal = displayedValue.textContent.split('.')[1].split('e')[0].length;
+        let roundedShortenedValue = Number.parseFloat(displayedValue.textContent.split('e')[0]).toFixed(9 - beforeDecimal >= 0 ? 6 - beforeDecimal : 0) + 'e' + displayedValue.textContent.split('e')[1];
         displayedValue.textContent = roundedShortenedValue;
     }
     sizeOutput();
@@ -102,7 +111,7 @@ function sizeOutput() {
         case 8:
             displayedValue.style.fontSize = '.8em';
             break;
-        case 9:
+        default:
             displayedValue.style.fontSize = '.7em';
             break;
     }
