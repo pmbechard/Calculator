@@ -12,6 +12,7 @@
 /*              BODY                  */
 
 #main-content {
+    margin-top: 2%;
     display: flex;
     justify-content: center;
     align-items: center;
