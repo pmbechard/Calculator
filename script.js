@@ -13,7 +13,7 @@ TO DO:
     - RESULTS TEXT SHOULD SHRINK AS NUMBER LENGTH INCREASES
 
 KNOWN BUGS:
-    - None
+    - ROUNDING IN DECIMAL TRUNCATION (E.G. 10/6=1.66666666 BUT SHOULD BE 10/6=1.66666667)
 
 */
 
@@ -21,6 +21,7 @@ let currentInput = '0';
 let storedValue = null;
 let currentOperator = '';
 const displayedValue = document.getElementById('input');
+
 
 /*         NUMBER BUTTONS       */
 const numberButtons = document.querySelectorAll('.number-button');
@@ -31,9 +32,9 @@ numberButtons.forEach( (button) => {
     });
 });
 
+
 /*      INPUT AND DISPLAY       */
 function addToInput(value) {
-    
     if (value === '+-') {
         currentInput *= -1;
         currentInput = currentInput.toPrecision();
@@ -73,10 +74,14 @@ function updateDisplay() {
         let splitCurrent = currentInput.split('.');
         displayedValue.textContent = Number.parseInt(splitCurrent[0]).toLocaleString('en-US') + '.' + splitCurrent[1];
     }
-} else {
-    displayedValue.textContent = currentInput;
+    } else {
+        displayedValue.textContent = currentInput;
+    }
+    if (displayedValue.textContent.replace(',', '').replace(',', '').replace('.','').length > 9) {
+        displayedValue.textContent = displayedValue.textContent.slice(0, 10);
+    }
 }
-}
+
 
 /*          OPERATORS           */
 const operatorButtons = document.querySelectorAll('.operator-button');
@@ -112,10 +117,10 @@ function doCalculation() {
             result = Number.parseFloat((stored - current).toPrecision(storedValue.length > currentInput.length ? storedValue.length : currentInput.length));
             break;
         case 'x':
-            result = stored * current;
+            result = Number.parseFloat((stored * current).toPrecision());
             break;
         case '/':
-            result = stored / current;
+            result = Number.parseFloat((stored / current).toPrecision());
             break;
         default:
             result = current;
