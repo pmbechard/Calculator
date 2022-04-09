@@ -57,8 +57,6 @@ function addToInput(value) {
 }
 
 function updateDisplay() {
-    console.log(currentInput);
-    console.log(typeof currentInput);
      if (currentInput === 'NaN' || currentInput.includes('Infinity')) {
         displayedValue.textContent = 'Error';
      } else if (currentInput >= 1000 || Number.parseFloat(currentInput) <= -1000) {
