@@ -12,7 +12,7 @@ Last Updated: 9 Apr 2022
 TO DO:
 
 KNOWN BUGS:
-    1. RESULTS FONT TOO LARGE IN MOBILE VIEW 
+    1. RESULTS FONT TOO LARGE IN MOBILE VIEW (MIGHT CONSIDER USING window.innerWidth FOR RESPONSIVENESS IN sizeOutput())
 */
 
 let currentInput = '0';
@@ -103,16 +103,16 @@ function sizeOutput() {
         case 4:
         case 5:
         case 6:
-            displayedValue.style.fontSize = '1em';
+            displayedValue.style.fontSize = '100%';
             break;
         case 7:
-            displayedValue.style.fontSize = '.9em';
+            displayedValue.style.fontSize = '90%';
             break;
         case 8:
-            displayedValue.style.fontSize = '.8em';
+            displayedValue.style.fontSize = '80%';
             break;
         default:
-            displayedValue.style.fontSize = '.7em';
+            displayedValue.style.fontSize = '70%';
             break;
     }
 }
